@@ -19,10 +19,12 @@ button.addEventListener('click', () => {
 const show = (data) => {
     const display = document.getElementById('display');
     //const data1 = JSON.stringify(data);
+
+    console.log(data)
     display.innerHTML=""
     for (let i = 0; i < data.length; i++) {
         const pd = document.createElement('p');
-        pd.innerText = data[i];
+        pd.innerText = data[i].title;
         display.appendChild(pd);
     }
 };

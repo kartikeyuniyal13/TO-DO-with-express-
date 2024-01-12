@@ -1,21 +1,62 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-
-const todo = [];
 const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const fs = require('fs');
 
+app.use(cors());
 app.use(bodyParser.json());
-//app.use(express.static(path.join(__dirname, 'public')));
+
+const filePath = 'Data.json';
 
 app.get('/todolist', (req, res) => {
-  res.json(todo); // Send the entire 'todo' array as JSON
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading Data.json:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    try {
+      const list = data ? JSON.parse(data) : [];
+      res.json(list);
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 });
 
 app.post('/add', (req, res) => {
-  const inputValue = req.body.inputValue;
-  todo.push(inputValue);
-  res.json({ message: 'New task added', inputValue });
+  const entry = {
+    title: req.body.inputValue,
+  };
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading Data.json:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    try {
+      const list = data ? JSON.parse(data) : [];
+      list.push(entry);
+
+      fs.writeFile(filePath, JSON.stringify(list), 'utf8', (writeErr) => {
+        if (writeErr) {
+          console.error('Error writing to Data.json:', writeErr);
+          res.status(500).json({ error: 'Internal Server Error' });
+          return;
+        }
+
+        res.status(201).json(entry);
+      });
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 });
 
 const PORT = 3000;
