@@ -28,6 +28,17 @@ const show = (data) => {
         display.appendChild(pd);
     }
 };
+const showIndex = (data) => {
+    const display = document.getElementById('display');
+    //const data1 = JSON.stringify(data);
+
+    console.log(data)
+    display.innerHTML=""
+     const pd = document.createElement('p');
+    pd.innerText = data.title;
+        display.appendChild(pd);
+    
+};
 
 
 const showbutton = document.getElementById('show-but');
@@ -43,3 +54,21 @@ showbutton.addEventListener('click', () => {
     .then(show)
     .catch(error => console.error('Error:', error));
 });
+
+function findTodo(id){
+    fetch("http://localhost:3000/findlist/"+id,{
+        method:"GET",
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }).then(res=>res.json()).then(showIndex)
+}
+
+
+const find= document.getElementById('id-but');
+find.addEventListener('click',()=>{
+    const id=document.getElementById('id-input').value;
+    findTodo(id);
+
+
+})
