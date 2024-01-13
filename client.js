@@ -23,20 +23,36 @@ const show = (data) => {
     console.log(data)
     display.innerHTML=""
     for (let i = 0; i < data.length; i++) {
+        const dv=document.createElement('div')
+
         const pd = document.createElement('p');
         pd.innerText = data[i].title;
-        display.appendChild(pd);
+        const bt=document.createElement('button');
+        bt.innerText='DELETE'
+        bt.classList.add('del-but');
+        bt.setAttribute("onclick", "deleteTodo(" + data[i].id + ")");
+
+        dv.appendChild(pd);
+        dv.appendChild(bt)
+        display.appendChild(dv)
     }
 };
+
+
 const showIndex = (data) => {
     const display = document.getElementById('display');
     //const data1 = JSON.stringify(data);
 
     console.log(data)
     display.innerHTML=""
+    const bt=document.createElement('button')
+    bt.innerText='DELETE'
+    bt.classList.add('del-but');
+    bt.setAttribute("onclick", "deleteTodo(" + data.id + ")");
      const pd = document.createElement('p');
     pd.innerText = data.title;
         display.appendChild(pd);
+        display.appendChild(bt)
     
 };
 
